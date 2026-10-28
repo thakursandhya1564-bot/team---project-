@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriSense | Farmer App</title>
+    <style>
+      :root {
+        --bg: #f4f9f3;
+        --bg-2: #eaf7ec;
+        --card: #ffffff;
+        --primary: #1c6c3b;
+        --primary-dark: #114c2b;
+        --accent: #f4b942;
+        --danger: #d9534f;
+        --warning: #f0ad4e;
+        --success: #2ca86a;
+        --text: #183426;
+        --muted: #5b7268;
+        --line: #dfeee2;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body{
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 100%);
+        color: var(--text);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+        color: white;
+        padding: 18px 0;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .brand {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .language-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .language-control select {
+        width: auto;
+        min-width: 130px;
+        padding: 8px 10px;
+        border-color: rgba(255, 255, 255, 0.3);
+        background: white;
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.82rem;
+      }
+
+      .app {
+        padding: 32px 0 60px;
+      }
+
+      .notification-bar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+        padding: 16px 20px;
+        background: #fff8e8;
+        border: 1px solid #f0d893;
+        border-radius: 16px;
+      }
+
+      .notification-bar[hidden] {
+        display: none;
+      }
+
+      .notification-icon {
+        flex: 0 0 auto;
+        font-size: 1.35rem;
+      }
+
+      .notification-content {
+        display: grid;
+        gap: 4px;
+        flex: 1;
+        line-height: 1.5;
+      }
+
+      .notification-content strong {
+        color: #805b12;
+      }
+
+      .notification-link {
+        flex: 0 0 auto;
+        color: var(--primary-dark);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .notification-link:hover {
+        text-decoration: underline;
+      }
+
+      .notification-dismiss {
+        flex: 0 0 auto;
+        padding: 4px 8px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .notification-dismiss:hover {
+        background: rgba(17, 76, 43, 0.08);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 14px 34px rgba(17, 76, 43, 0.08);
+      }
+
+      .hero-main {
+        padding: 28px;
+      }
+
+      .eyebrow {
+        display: inline-block;
+        background: #e9f8ee;
+        color: var(--primary);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 14px;
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        line-height: 1.1;
+      }
+
+      .lead {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 1.05rem;
+        max-width: 620px;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 14px 20px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #edf8ee;
+        color: var(--primary-dark);
+      }
+
+      .hero-side {
+        padding: 22px;
+      }
+
+      .weather-box {
+        background: linear-gradient(135deg, #ecf9ef 0%, #ecf2ff 100%);
+        border-radius: 18px;
+        padding: 18px;
+        border: 1px solid var(--line);
+      }
+
+      .weather-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .temperature {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 10px 0;
+      }
+
+      .status-pill {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .status-good {
+        background: #e9f9ee;
+        color: var(--success);
+      }
+
+      .status-warn {
+        background: #fff4dc;
+        color: #a56908;
+      }
+
+      .status-danger {
+        background: #fde9e8;
+        color: var(--danger);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 28px;
+      }
+
+      .stat-card {
+        padding: 22px 18px;
+      }
+
+      .stat-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-bottom: 10px;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 24px;
+      }
+
+      .section-card {
+        padding: 24px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 1.4rem;
+      }
+
+      .field-list {
+        display: grid;
+        gap: 14px;
+      }
+
+      .field-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 18px;
+        border-radius: 16px;
+        background: #f7faf8;
+        border: 1px solid var(--line);
+      }
+
+      .field-info h3 {
+        margin: 0 0 4px;
+        font-size: 1.02rem;
+      }
+
+      .field-info p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .field-status {
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 7px 10px;
+        border-radius: 999px;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+      }
+
+      .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font-size: 1rem;
+        background: #fbfdfb;
+        color: var(--text);
+      }
+
+      .recommendation-box {
+        margin-top: 18px;
+        padding: 16px 18px;
+        background: linear-gradient(135deg, #edfdf4 0%, #fff7e8 100%);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      .recommendation-box h3 {
+        margin: 0 0 10px;
+      }
+
+      .recommendation-box p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      #resultText {
+        white-space: pre-line;
+      }
+
+      .report-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .report-item {
+        background: #f8fbf9;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 16px;
+      }
+
+      .report-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .report-item span {
+        color: var(--muted);
+      }
+
+      .support-section {
+        margin-top: 24px;
+      }
+
+      .support-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .support-card {
+        background: linear-gradient(135deg, #f9fdf8 0%, #f5f8ff 100%);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 20px;
+      }
+
+      .support-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+        background: #edf9ef;
+      }
+
+      .support-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.08rem;
+      }
+
+      .support-card p,
+      .support-card a {
+        margin: 6px 0;
+        color: var(--muted);
+        line-height: 1.7;
+        text-decoration: none;
+      }
+
+      .support-card a {
+        display: inline-block;
+        color: var(--primary-dark);
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .grid,
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .nav,
+        .section-header,
+        .cta-row,
+        .input-row,
+        .notification-bar {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+
+        .nav {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand">AgriSense</div>
+        <div class="nav-actions">
+          <div class="badge" data-i18n="farmerDashboard">Farmer Dashboard</div>
+          <div class="badge" data-i18n="liveAlerts">Live Alerts</div>
+          <label class="language-control">
+            <span data-i18n="language">Language</span>
+            <select id="languageSelect" aria-label="Language">
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="te">తెలుగు</option>
+              <option value="ta">தமிழ்</option>
+              <option value="kn">ಕನ್ನಡ</option>
+              <option value="ml">മലയാളം</option>
+              <option value="mr">मराठी</option>
+              <option value="bn">বাংলা</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    </header>
+
+    <main class="app container">
+      <aside class="notification-bar" id="notificationBar" role="status" aria-live="polite">
+        <span class="notification-icon" aria-hidden="true">⚠️</span>
+        <div class="notification-content">
+          <strong data-i18n="liveAlerts">Live Alerts</strong>
+          <span><strong data-i18n="southPlot">South Plot</strong> — <span data-i18n="irrigationBeforeEvening">Low moisture. Irrigation recommended before evening.</span></span>
+        </div>
+        <a class="notification-link" href="#recentAlerts"><span data-i18n="viewAlerts">View Alerts</span> &rarr;</a>
+        <button class="notification-dismiss" id="dismissNotification" type="button" aria-label="Dismiss notification" data-i18n-aria-label="dismissNotification">&times;</button>
+      </aside>
+
+      <section class="hero">
+        <div class="panel hero-main">
+          <span class="eyebrow" data-i18n="smartFarming">Smart Farming</span>
+          <h1 data-i18n="heroTitle">Track crops, soil, and field health faster.</h1>
+          <p class="lead" data-i18n="heroLead">
+            Help farmers detect dry land, low moisture, and pest risk early so crops stay healthy and irrigation is smarter.
+          </p>
+          <div class="cta-row">
+            <button class="btn btn-primary" data-i18n="addFieldReport">Add Field Report</button>
+            <button class="btn btn-secondary" data-i18n="viewAlerts">View Alerts</button>
+          </div>
+        </div>
+
+        <div class="panel hero-side">
+          <div class="weather-box">
+            <div class="weather-row">
+              <strong data-i18n="fieldStatus">Field Status</strong>
+              <span class="status-pill status-good" data-i18n="healthy">Healthy</span>
+            </div>
+            <div class="temperature">32°C</div>
+            <div><span data-i18n="soilMoisture">Soil Moisture</span>: 68%</div>
+            <div style="margin-top: 8px; color: var(--muted);"><span data-i18n="humidity">Humidity</span>: 52%</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="panel stat-card">
+          <div class="stat-label" data-i18n="fieldMoisture">Field Moisture</div>
+          <div class="stat-value" style="color: var(--success);">68%</div>
+        </div>
+
+        <div class="panel stat-card">
+          <div class="stat-label" data-i18n="dryLand">Dry Land</div>
+          <div class="stat-value" style="color: var(--warning);">2 <span data-i18n="zones">Zones</span></div>
+        </div>
+
+        <div class="panel stat-card">
+          <div class="stat-label" data-i18n="pestRisk">Pest Risk</div>
+          <div class="stat-value" style="color: var(--danger);" data-i18n="low">Low</div>
+        </div>
+
+        <div class="panel stat-card">
+          <div class="stat-label" data-i18n="waterNeeded">Water Needed</div>
+          <div class="stat-value" style="color: var(--primary);">4 <span data-i18n="hours">hrs</span></div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel section-card">
+          <div class="section-header">
+            <h2 data-i18n="fieldOverview">Field Overview</h2>
+            <span class="status-pill status-warn" data-i18n="needsCheck">Needs check</span>
+          </div>
+
+          <div class="field-list">
+            <div class="field-item">
+              <div class="field-info">
+                <h3 data-i18n="northPlot">North Plot</h3>
+                <p data-i18n="riceField">Rice field</p>
+              </div>
+              <span class="field-status" style="background: #eafaf0; color: var(--success);" data-i18n="healthy">Healthy</span>
+            </div>
+
+            <div class="field-item">
+              <div class="field-info">
+                <h3 data-i18n="southPlot">South Plot</h3>
+                <p data-i18n="wheatField">Wheat field</p>
+              </div>
+              <span class="field-status" style="background: #fff4dc; color: #a56908;" data-i18n="dry">Dry</span>
+            </div>
+
+            <div class="field-item">
+              <div class="field-info">
+                <h3 data-i18n="eastPlot">East Plot</h3>
+                <p data-i18n="tomatoField">Tomato field</p>
+              </div>
+              <span class="field-status" style="background: #fde9e8; color: var(--danger);" data-i18n="pestAlert">Pest Alert</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel section-card">
+          <div class="section-header">
+            <h2 data-i18n="newReport">New Report</h2>
+          </div>
+
+          <form id="farmForm">
+            <div class="input-row">
+              <div class="field">
+                <label for="fieldName" data-i18n="fieldName">Field Name</label>
+                <input type="text" id="fieldName" value="South Plot" />
+              </div>
+              <div class="field">
+                <label for="cropType" data-i18n="cropType">Crop Type</label>
+                <input type="text" id="cropType" value="Wheat" />
+              </div>
+            </div>
+
+            <div class="input-row">
+              <div class="field">
+                <label for="moisture" data-i18n="soilMoisturePercent">Soil Moisture (%)</label>
+                <input type="number" id="moisture" value="28" min="0" max="100" />
+              </div>
+              <div class="field">
+                <label for="pestLevel" data-i18n="pestLevel">Pest Level</label>
+                <select id="pestLevel">
+                  <option value="low" data-i18n="low">Low</option>
+                  <option value="medium" data-i18n="medium">Medium</option>
+                  <option value="high" selected data-i18n="high">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="soilType" data-i18n="soilType">Soil Type</label>
+              <select id="soilType">
+                <option value="loamy" selected data-i18n="loamy">Loamy</option>
+                <option value="sandy" data-i18n="sandy">Sandy</option>
+                <option value="clay" data-i18n="clay">Clay</option>
+                <option value="silty" data-i18n="silty">Silty</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;" data-i18n="analyzeField">Analyze Field</button>
+          </form>
+
+          <div class="recommendation-box">
+            <h3 data-i18n="recommendation">Recommendation</h3>
+            <p id="resultText" data-i18n="initialRecommendation">This field is dry and pest activity is high. Irrigate immediately and inspect crop leaves for insect damage.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card panel" id="recentAlerts" style="margin-top: 24px;">
+        <div class="section-header">
+          <h2 data-i18n="recentAlerts">Recent Alerts</h2>
+        </div>
+
+        <div class="report-list">
+          <div class="report-item">
+            <strong data-i18n="eastPlot">East Plot</strong>
+            <span data-i18n="leafDamage">Leaf damage detected. Pesticide review recommended.</span>
+          </div>
+
+          <div class="report-item">
+            <strong data-i18n="southPlot">South Plot</strong>
+            <span data-i18n="irrigationBeforeEvening">Low moisture. Irrigation recommended before evening.</span>
+          </div>
+
+          <div class="report-item">
+            <strong data-i18n="northPlot">North Plot</strong>
+            <span data-i18n="moistureStable">Moisture is stable and crop looks healthy.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card panel support-section">
+        <div class="section-header">
+          <h2 data-i18n="helpSupport">Farmer Help & Support</h2>
+        </div>
+
+        <div class="support-grid">
+          <div class="support-card">
+            <div class="support-icon">📍</div>
+            <h3 data-i18n="nearbyCenter">Nearby Research Center</h3>
+            <p data-i18n="centerName">Krishi Vigyan Kendra, District Agriculture Office</p>
+            <p><span data-i18n="address">Address: Main Market Road, Near Bus Stand</span></p>
+            <a href="tel:+919876543210"><span data-i18n="call">Call</span>: +91 98765 43210</a>
+          </div>
+
+          <div class="support-card">
+            <div class="support-icon">📞</div>
+            <h3 data-i18n="emergencySupport">Emergency Support</h3>
+            <p data-i18n="urgentHelp">For urgent field issues, pest attack, or irrigation help.</p>
+            <a href="tel:+919876543211"><span data-i18n="helpline">Helpline</span>: +91 98765 43211</a>
+          </div>
+
+          <div class="support-card">
+            <div class="support-icon">👩‍💻</div>
+            <h3 data-i18n="contactMe">Contact Me</h3>
+            <p>Sandhya Thakur</p>
+            <a href="mailto:sandhya.thakur.agri@gmail.com">sandhya.thakur.agri@gmail.com</a>
+            <br />
+            <a href="tel:+919876543212">+91 98765 43212</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const translations = {
+        en: {
+          language: 'Language', farmerDashboard: 'Farmer Dashboard', liveAlerts: 'Live Alerts', smartFarming: 'Smart Farming', dismissNotification: 'Dismiss notification',
+          heroTitle: 'Track crops, soil, and field health faster.', heroLead: 'Help farmers detect dry land, low moisture, and pest risk early so crops stay healthy and irrigation is smarter.',
+          addFieldReport: 'Add Field Report', viewAlerts: 'View Alerts', fieldStatus: 'Field Status', healthy: 'Healthy', soilMoisture: 'Soil Moisture', humidity: 'Humidity',
+          fieldMoisture: 'Field Moisture', dryLand: 'Dry Land', zones: 'Zones', pestRisk: 'Pest Risk', low: 'Low', waterNeeded: 'Water Needed', hours: 'hrs',
+          fieldOverview: 'Field Overview', needsCheck: 'Needs check', northPlot: 'North Plot', riceField: 'Rice field', southPlot: 'South Plot', wheatField: 'Wheat field',
+          dry: 'Dry', eastPlot: 'East Plot', tomatoField: 'Tomato field', pestAlert: 'Pest Alert', newReport: 'New Report', fieldName: 'Field Name', cropType: 'Crop Type', defaultFieldName: 'South Plot', defaultCropType: 'Wheat',
+          soilMoisturePercent: 'Soil Moisture (%)', pestLevel: 'Pest Level', medium: 'Medium', high: 'High', soilType: 'Soil Type', loamy: 'Loamy', sandy: 'Sandy', clay: 'Clay', silty: 'Silty',
+          analyzeField: 'Analyze Field', recommendation: 'Recommendation', initialRecommendation: 'This field is dry and pest activity is high. Irrigate immediately and inspect crop leaves for insect damage.',
+          recentAlerts: 'Recent Alerts', leafDamage: 'Leaf damage detected. Pesticide review recommended.', irrigationBeforeEvening: 'Low moisture. Irrigation recommended before evening.',
+          moistureStable: 'Moisture is stable and crop looks healthy.', helpSupport: 'Farmer Help & Support', nearbyCenter: 'Nearby Research Center',
+          centerName: 'Krishi Vigyan Kendra, District Agriculture Office', address: 'Address: Main Market Road, Near Bus Stand', call: 'Call', emergencySupport: 'Emergency Support',
+          urgentHelp: 'For urgent field issues, pest attack, or irrigation help.', helpline: 'Helpline', contactMe: 'Contact Me',
+          veryDry: 'Very dry soil detected. Water the field immediately.', moistureLowAdvice: 'Soil moisture is low. Schedule irrigation soon.', moistureOkay: 'Soil moisture is acceptable for now.',
+          pestHighAdvice: 'Pest activity is high. Inspect crops and take preventive action.', pestMediumAdvice: 'Moderate pest activity. Keep monitoring.', pestLowAdvice: 'Pest risk is low.',
+          soilPrefix: 'Soil type', soilGuidanceLoamy: 'Loamy soil generally balances drainage and moisture retention.', soilGuidanceSandy: 'Sandy soil drains quickly, so check moisture more often.',
+          soilGuidanceClay: 'Clay soil retains water, so avoid overwatering.', soilGuidanceSilty: 'Silty soil retains moisture; monitor drainage and avoid compaction.'
+        },
+        hi: {
+          language: 'भाषा', farmerDashboard: 'किसान डैशबोर्ड', liveAlerts: 'लाइव अलर्ट', smartFarming: 'स्मार्ट खेती', dismissNotification: 'सूचना हटाएँ',
+          heroTitle: 'फसल, मिट्टी और खेत की स्थिति पर तेजी से नज़र रखें।', heroLead: 'सूखी ज़मीन, कम नमी और कीटों के खतरे को समय रहते पहचानें, ताकि फसल स्वस्थ रहे और सिंचाई बेहतर हो।',
+          addFieldReport: 'खेत की रिपोर्ट जोड़ें', viewAlerts: 'अलर्ट देखें', fieldStatus: 'खेत की स्थिति', healthy: 'स्वस्थ', soilMoisture: 'मिट्टी की नमी', humidity: 'आर्द्रता',
+          fieldMoisture: 'खेत की नमी', dryLand: 'सूखी ज़मीन', zones: 'क्षेत्र', pestRisk: 'कीट का खतरा', low: 'कम', waterNeeded: 'पानी की ज़रूरत', hours: 'घंटे',
+          fieldOverview: 'खेत का विवरण', needsCheck: 'जाँच आवश्यक', northPlot: 'उत्तरी खेत', riceField: 'धान का खेत', southPlot: 'दक्षिणी खेत', wheatField: 'गेहूँ का खेत',
+          dry: 'सूखा', eastPlot: 'पूर्वी खेत', tomatoField: 'टमाटर का खेत', pestAlert: 'कीट अलर्ट', newReport: 'नई रिपोर्ट', fieldName: 'खेत का नाम', cropType: 'फसल का प्रकार', defaultFieldName: 'दक्षिणी खेत', defaultCropType: 'गेहूँ',
+          soilMoisturePercent: 'मिट्टी की नमी (%)', pestLevel: 'कीट का स्तर', medium: 'मध्यम', high: 'ज़्यादा', soilType: 'मिट्टी का प्रकार', loamy: 'दोमट', sandy: 'रेतीली', clay: 'चिकनी', silty: 'गाद वाली',
+          analyzeField: 'खेत का विश्लेषण करें', recommendation: 'सुझाव', initialRecommendation: 'इस खेत की मिट्टी सूखी है और कीटों की गतिविधि अधिक है। तुरंत सिंचाई करें और पत्तियों को नुकसान के लिए जाँचें।',
+          recentAlerts: 'हाल के अलर्ट', leafDamage: 'पत्तियों को नुकसान मिला। कीटनाशक के उपयोग की समीक्षा करें।', irrigationBeforeEvening: 'नमी कम है। शाम से पहले सिंचाई करें।',
+          moistureStable: 'नमी स्थिर है और फसल स्वस्थ दिख रही है।', helpSupport: 'किसान सहायता', nearbyCenter: 'नज़दीकी अनुसंधान केंद्र',
+          centerName: 'कृषि विज्ञान केंद्र, जिला कृषि कार्यालय', address: 'पता: मुख्य बाज़ार मार्ग, बस स्टैंड के पास', call: 'कॉल करें', emergencySupport: 'आपातकालीन सहायता',
+          urgentHelp: 'खेत की आपात समस्या, कीट हमले या सिंचाई सहायता के लिए।', helpline: 'हेल्पलाइन', contactMe: 'संपर्क करें',
+          veryDry: 'मिट्टी बहुत सूखी है। खेत में तुरंत पानी दें।', moistureLowAdvice: 'मिट्टी में नमी कम है। जल्द सिंचाई करें।', moistureOkay: 'फिलहाल मिट्टी की नमी ठीक है।',
+          pestHighAdvice: 'कीटों की गतिविधि अधिक है। फसल की जाँच करें और बचाव करें।', pestMediumAdvice: 'कीटों की गतिविधि मध्यम है। निगरानी करते रहें।', pestLowAdvice: 'कीटों का खतरा कम है.',
+          soilPrefix: 'मिट्टी का प्रकार', soilGuidanceLoamy: 'दोमट मिट्टी में जल निकासी और नमी का संतुलन रहता है।', soilGuidanceSandy: 'रेतीली मिट्टी में पानी जल्दी निकलता है; नमी बार-बार जाँचें।',
+          soilGuidanceClay: 'चिकनी मिट्टी पानी रोकती है; ज़्यादा सिंचाई से बचें।', soilGuidanceSilty: 'गाद वाली मिट्टी में नमी बनी रहती है; जल निकासी देखें और मिट्टी को दबने से बचाएँ।'
+        },
+        te: {
+          language: 'భాష', farmerDashboard: 'రైతు డ్యాష్‌బోర్డ్', liveAlerts: 'తక్షణ హెచ్చరికలు', smartFarming: 'స్మార్ట్ వ్యవసాయం', dismissNotification: 'సూచనను తీసివేయండి',
+          heroTitle: 'పంటలు, నేల, పొలం ఆరోగ్యాన్ని వేగంగా పర్యవేక్షించండి.', heroLead: 'పంటలు ఆరోగ్యంగా ఉండేలా, నీటిపారుదల మెరుగుపడేలా ఎండిన నేల, తక్కువ తేమ, పురుగుల ప్రమాదాన్ని ముందుగానే గుర్తించండి.',
+          addFieldReport: 'పొలం నివేదికను జోడించండి', viewAlerts: 'హెచ్చరికలను చూడండి', fieldStatus: 'పొలం స్థితి', healthy: 'ఆరోగ్యంగా ఉంది', soilMoisture: 'నేల తేమ', humidity: 'గాలిలో తేమ',
+          fieldMoisture: 'పొలం తేమ', dryLand: 'ఎండిన భూమి', zones: 'ప్రాంతాలు', pestRisk: 'పురుగుల ప్రమాదం', low: 'తక్కువ', waterNeeded: 'అవసరమైన నీరు', hours: 'గం.',
+          fieldOverview: 'పొలం వివరాలు', needsCheck: 'పరిశీలించాలి', northPlot: 'ఉత్తర పొలం', riceField: 'వరి పొలం', southPlot: 'దక్షిణ పొలం', wheatField: 'గోధుమ పొలం',
+          dry: 'ఎండిపోయింది', eastPlot: 'తూర్పు పొలం', tomatoField: 'టమాటా పొలం', pestAlert: 'పురుగుల హెచ్చరిక', newReport: 'కొత్త నివేదిక', fieldName: 'పొలం పేరు', cropType: 'పంట రకం', defaultFieldName: 'దక్షిణ పొలం', defaultCropType: 'గోధుమ',
+          soilMoisturePercent: 'నేల తేమ (%)', pestLevel: 'పురుగుల స్థాయి', medium: 'మధ్యస్థం', high: 'ఎక్కువ', soilType: 'నేల రకం', loamy: 'లోమీ', sandy: 'ఇసుక నేల', clay: 'బంకమట్టి', silty: 'సిల్ట్ నేల',
+          analyzeField: 'పొలాన్ని విశ్లేషించండి', recommendation: 'సూచన', initialRecommendation: 'ఈ పొలం నేల ఎండిపోయింది, పురుగుల ఉధృతి ఎక్కువగా ఉంది. వెంటనే నీరు పెట్టి ఆకులను పరిశీలించండి.',
+          recentAlerts: 'ఇటీవలి హెచ్చరికలు', leafDamage: 'ఆకులపై నష్టం గుర్తించబడింది. పురుగుమందుల వినియోగాన్ని పరిశీలించండి.', irrigationBeforeEvening: 'తేమ తక్కువగా ఉంది. సాయంత్రానికి ముందు నీరు పెట్టండి.',
+          moistureStable: 'తేమ స్థిరంగా ఉంది, పంట ఆరోగ్యంగా కనిపిస్తోంది.', helpSupport: 'రైతు సహాయం', nearbyCenter: 'సమీప పరిశోధనా కేంద్రం',
+          centerName: 'కృషి విజ్ఞాన కేంద్రం, జిల్లా వ్యవసాయ కార్యాలయం', address: 'చిరునామా: మెయిన్ మార్కెట్ రోడ్, బస్ స్టాండ్ దగ్గర', call: 'కాల్ చేయండి', emergencySupport: 'అత్యవసర సహాయం',
+          urgentHelp: 'పొలం సమస్యలు, పురుగుల దాడి లేదా నీటిపారుదల సహాయం కోసం.', helpline: 'హెల్ప్‌లైన్', contactMe: 'సంప్రదించండి',
+          veryDry: 'నేల చాలా ఎండిపోయింది. వెంటనే నీరు పెట్టండి.', moistureLowAdvice: 'నేలలో తేమ తక్కువగా ఉంది. త్వరలో నీరు పెట్టండి.', moistureOkay: 'ప్రస్తుతం నేల తేమ సరిపడా ఉంది.',
+          pestHighAdvice: 'పురుగుల ఉధృతి ఎక్కువగా ఉంది. పంటను పరిశీలించి నివారణ చర్యలు తీసుకోండి.', pestMediumAdvice: 'పురుగుల ఉధృతి మధ్యస్థంగా ఉంది. గమనిస్తూ ఉండండి.', pestLowAdvice: 'పురుగుల ప్రమాదం తక్కువగా ఉంది.',
+          soilPrefix: 'నేల రకం', soilGuidanceLoamy: 'లోమీ నేలలో నీటి పారుదల, తేమ సమతుల్యంగా ఉంటాయి.', soilGuidanceSandy: 'ఇసుక నేలలో నీరు త్వరగా ఇంకిపోతుంది; తేమను తరచూ చూడండి.',
+          soilGuidanceClay: 'బంకమట్టి నీటిని నిల్వ చేస్తుంది; ఎక్కువగా నీరు పెట్టవద్దు.', soilGuidanceSilty: 'సిల్ట్ నేల తేమను నిల్వ చేస్తుంది; నీటి పారుదలను చూసి నేల గట్టిపడకుండా చూడండి.'
+        },
+        ta: {
+          language: 'மொழி', farmerDashboard: 'விவசாயி முகப்பு', liveAlerts: 'நேரடி எச்சரிக்கைகள்', smartFarming: 'நவீன விவசாயம்', dismissNotification: 'அறிவிப்பை நீக்கவும்',
+          heroTitle: 'பயிர், மண், வயல் ஆரோக்கியத்தை விரைவாகக் கண்காணிக்கவும்.', heroLead: 'பயிர்கள் ஆரோக்கியமாக இருக்கவும் நீர்ப்பாசனம் சிறக்கவும் வறண்ட நிலம், குறைந்த ஈரப்பதம், பூச்சி அபாயத்தை முன்கூட்டியே கண்டறியுங்கள்.',
+          addFieldReport: 'வயல் அறிக்கையைச் சேர்க்கவும்', viewAlerts: 'எச்சரிக்கைகளைப் பார்க்கவும்', fieldStatus: 'வயல் நிலை', healthy: 'ஆரோக்கியம்', soilMoisture: 'மண் ஈரப்பதம்', humidity: 'காற்றின் ஈரப்பதம்',
+          fieldMoisture: 'வயல் ஈரப்பதம்', dryLand: 'வறண்ட நிலம்', zones: 'பகுதிகள்', pestRisk: 'பூச்சி அபாயம்', low: 'குறைவு', waterNeeded: 'தேவையான நீர்', hours: 'மணி',
+          fieldOverview: 'வயல் விவரம்', needsCheck: 'சரிபார்க்கவும்', northPlot: 'வடக்கு வயல்', riceField: 'நெல் வயல்', southPlot: 'தெற்கு வயல்', wheatField: 'கோதுமை வயல்',
+          dry: 'வறண்டது', eastPlot: 'கிழக்கு வயல்', tomatoField: 'தக்காளி வயல்', pestAlert: 'பூச்சி எச்சரிக்கை', newReport: 'புதிய அறிக்கை', fieldName: 'வயல் பெயர்', cropType: 'பயிர் வகை', defaultFieldName: 'தெற்கு வயல்', defaultCropType: 'கோதுமை',
+          soilMoisturePercent: 'மண் ஈரப்பதம் (%)', pestLevel: 'பூச்சி அளவு', medium: 'நடுத்தரம்', high: 'அதிகம்', soilType: 'மண் வகை', loamy: 'களிமண் கலந்த வளமண்', sandy: 'மணல் மண்', clay: 'களிமண்', silty: 'வண்டல் மண்',
+          analyzeField: 'வயலை ஆய்வு செய்', recommendation: 'பரிந்துரை', initialRecommendation: 'இந்த வயல் வறண்டுள்ளது; பூச்சிகளின் தாக்கம் அதிகம். உடனே நீர்ப்பாசனம் செய்து இலைகளில் சேதம் உள்ளதா பாருங்கள்.',
+          recentAlerts: 'சமீபத்திய எச்சரிக்கைகள்', leafDamage: 'இலை சேதம் கண்டறியப்பட்டது. பூச்சிக்கொல்லி பயன்பாட்டை மதிப்பாய்வு செய்யவும்.', irrigationBeforeEvening: 'ஈரப்பதம் குறைவு. மாலைக்குள் நீர்ப்பாசனம் செய்யவும்.',
+          moistureStable: 'ஈரப்பதம் சீராக உள்ளது; பயிர் ஆரோக்கியமாகத் தெரிகிறது.', helpSupport: 'விவசாயி உதவி', nearbyCenter: 'அருகிலுள்ள ஆராய்ச்சி மையம்',
+          centerName: 'கிருஷி விக்யான் கேந்திரா, மாவட்ட வேளாண்மை அலுவலகம்', address: 'முகவரி: மெயின் மார்க்கெட் சாலை, பேருந்து நிலையம் அருகில்', call: 'அழைக்கவும்', emergencySupport: 'அவசர உதவி',
+          urgentHelp: 'வயல் அவசரநிலை, பூச்சித் தாக்குதல் அல்லது நீர்ப்பாசன உதவிக்கு.', helpline: 'உதவி எண்', contactMe: 'தொடர்பு கொள்ளவும்',
+          veryDry: 'மண் மிகவும் வறண்டுள்ளது. உடனே நீர் பாய்ச்சவும்.', moistureLowAdvice: 'மண்ணில் ஈரப்பதம் குறைவு. விரைவில் நீர்ப்பாசனம் செய்யவும்.', moistureOkay: 'தற்போது மண் ஈரப்பதம் ஏற்றதாக உள்ளது.',
+          pestHighAdvice: 'பூச்சித் தாக்கம் அதிகம். பயிர்களைப் பரிசோதித்து தடுப்பு நடவடிக்கை எடுக்கவும்.', pestMediumAdvice: 'பூச்சித் தாக்கம் நடுத்தரமாக உள்ளது. தொடர்ந்து கண்காணிக்கவும்.', pestLowAdvice: 'பூச்சி அபாயம் குறைவு.',
+          soilPrefix: 'மண் வகை', soilGuidanceLoamy: 'வளமண் நீர் வடிகால் மற்றும் ஈரப்பதத்தைச் சமநிலைப்படுத்தும்.', soilGuidanceSandy: 'மணல் மண்ணில் நீர் விரைவாக வடியும்; ஈரப்பதத்தை அடிக்கடி பாருங்கள்.',
+          soilGuidanceClay: 'களிமண் நீரைத் தக்கவைக்கும்; அதிக நீர்ப்பாசனத்தைத் தவிர்க்கவும்.', soilGuidanceSilty: 'வண்டல் மண் ஈரப்பதத்தைத் தக்கவைக்கும்; வடிகாலை கண்காணித்து மண் இறுக்கமடைவதைத் தவிர்க்கவும்.'
+        },
+        kn: {
+          language: 'ಭಾಷೆ', farmerDashboard: 'ರೈತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್', liveAlerts: 'ತಕ್ಷಣದ ಎಚ್ಚರಿಕೆಗಳು', smartFarming: 'ಸ್ಮಾರ್ಟ್ ಕೃಷಿ', dismissNotification: 'ಸೂಚನೆಯನ್ನು ಮುಚ್ಚಿ',
+          heroTitle: 'ಬೆಳೆ, ಮಣ್ಣು ಮತ್ತು ಹೊಲದ ಆರೋಗ್ಯವನ್ನು ವೇಗವಾಗಿ ಗಮನಿಸಿ.', heroLead: 'ಬೆಳೆ ಆರೋಗ್ಯವಾಗಿರಲು ಮತ್ತು ನೀರಾವರಿ ಉತ್ತಮವಾಗಲು ಒಣ ಭೂಮಿ, ಕಡಿಮೆ ತೇವಾಂಶ ಮತ್ತು ಕೀಟದ ಅಪಾಯವನ್ನು ಮೊದಲೇ ಗುರುತಿಸಿ.',
+          addFieldReport: 'ಹೊಲದ ವರದಿ ಸೇರಿಸಿ', viewAlerts: 'ಎಚ್ಚರಿಕೆಗಳನ್ನು ನೋಡಿ', fieldStatus: 'ಹೊಲದ ಸ್ಥಿತಿ', healthy: 'ಆರೋಗ್ಯಕರ', soilMoisture: 'ಮಣ್ಣಿನ ತೇವಾಂಶ', humidity: 'ಗಾಳಿಯ ತೇವಾಂಶ',
+          fieldMoisture: 'ಹೊಲದ ತೇವಾಂಶ', dryLand: 'ಒಣ ಭೂಮಿ', zones: 'ವಲಯಗಳು', pestRisk: 'ಕೀಟದ ಅಪಾಯ', low: 'ಕಡಿಮೆ', waterNeeded: 'ಬೇಕಾದ ನೀರು', hours: 'ಗಂ.',
+          fieldOverview: 'ಹೊಲದ ವಿವರ', needsCheck: 'ಪರಿಶೀಲಿಸಿ', northPlot: 'ಉತ್ತರದ ಹೊಲ', riceField: 'ಭತ್ತದ ಹೊಲ', southPlot: 'ದಕ್ಷಿಣದ ಹೊಲ', wheatField: 'ಗೋಧಿ ಹೊಲ',
+          dry: 'ಒಣಗಿದೆ', eastPlot: 'ಪೂರ್ವದ ಹೊಲ', tomatoField: 'ಟೊಮೇಟೊ ಹೊಲ', pestAlert: 'ಕೀಟದ ಎಚ್ಚರಿಕೆ', newReport: 'ಹೊಸ ವರದಿ', fieldName: 'ಹೊಲದ ಹೆಸರು', cropType: 'ಬೆಳೆಯ ವಿಧ', defaultFieldName: 'ದಕ್ಷಿಣದ ಹೊಲ', defaultCropType: 'ಗೋಧಿ',
+          soilMoisturePercent: 'ಮಣ್ಣಿನ ತೇವಾಂಶ (%)', pestLevel: 'ಕೀಟದ ಮಟ್ಟ', medium: 'ಮಧ್ಯಮ', high: 'ಹೆಚ್ಚು', soilType: 'ಮಣ್ಣಿನ ವಿಧ', loamy: 'ಲೋಮಿ ಮಣ್ಣು', sandy: 'ಮರಳು ಮಣ್ಣು', clay: 'ಜೇಡಿ ಮಣ್ಣು', silty: 'ಸಿಲ್ಟ್ ಮಣ್ಣು',
+          analyzeField: 'ಹೊಲವನ್ನು ವಿಶ್ಲೇಷಿಸಿ', recommendation: 'ಶಿಫಾರಸು', initialRecommendation: 'ಈ ಹೊಲದ ಮಣ್ಣು ಒಣಗಿದೆ ಮತ್ತು ಕೀಟಗಳ ಚಟುವಟಿಕೆ ಹೆಚ್ಚಾಗಿದೆ. ತಕ್ಷಣ ನೀರು ಹಾಯಿಸಿ, ಎಲೆಗಳ ಹಾನಿಯನ್ನು ಪರಿಶೀಲಿಸಿ.',
+          recentAlerts: 'ಇತ್ತೀಚಿನ ಎಚ್ಚರಿಕೆಗಳು', leafDamage: 'ಎಲೆ ಹಾನಿ ಕಂಡುಬಂದಿದೆ. ಕೀಟನಾಶಕ ಬಳಕೆಯನ್ನು ಪರಿಶೀಲಿಸಿ.', irrigationBeforeEvening: 'ತೇವಾಂಶ ಕಡಿಮೆಯಾಗಿದೆ. ಸಂಜೆಗೂ ಮೊದಲು ನೀರಾವರಿ ಮಾಡಿ.',
+          moistureStable: 'ತೇವಾಂಶ ಸ್ಥಿರವಾಗಿದೆ ಮತ್ತು ಬೆಳೆ ಆರೋಗ್ಯಕರವಾಗಿ ಕಾಣುತ್ತದೆ.', helpSupport: 'ರೈತರ ಸಹಾಯ', nearbyCenter: 'ಹತ್ತಿರದ ಸಂಶೋಧನಾ ಕೇಂದ್ರ',
+          centerName: 'ಕೃಷಿ ವಿಜ್ಞಾನ ಕೇಂದ್ರ, ಜಿಲ್ಲಾ ಕೃಷಿ ಕಚೇರಿ', address: 'ವಿಳಾಸ: ಮುಖ್ಯ ಮಾರುಕಟ್ಟೆ ರಸ್ತೆ, ಬಸ್ ನಿಲ್ದಾಣದ ಹತ್ತಿರ', call: 'ಕರೆ ಮಾಡಿ', emergencySupport: 'ತುರ್ತು ಸಹಾಯ',
+          urgentHelp: 'ಹೊಲದ ತುರ್ತು ಸಮಸ್ಯೆ, ಕೀಟದ ದಾಳಿ ಅಥವಾ ನೀರಾವರಿ ಸಹಾಯಕ್ಕಾಗಿ.', helpline: 'ಸಹಾಯವಾಣಿ', contactMe: 'ಸಂಪರ್ಕಿಸಿ',
+          veryDry: 'ಮಣ್ಣು ತುಂಬಾ ಒಣಗಿದೆ. ತಕ್ಷಣ ನೀರು ಹಾಕಿ.', moistureLowAdvice: 'ಮಣ್ಣಿನ ತೇವಾಂಶ ಕಡಿಮೆಯಾಗಿದೆ. ಶೀಘ್ರದಲ್ಲೇ ನೀರಾವರಿ ಮಾಡಿ.', moistureOkay: 'ಸದ್ಯಕ್ಕೆ ಮಣ್ಣಿನ ತೇವಾಂಶ ಸರಿಯಾಗಿದೆ.',
+          pestHighAdvice: 'ಕೀಟಗಳ ಚಟುವಟಿಕೆ ಹೆಚ್ಚಾಗಿದೆ. ಬೆಳೆ ಪರಿಶೀಲಿಸಿ ಮುನ್ನೆಚ್ಚರಿಕೆ ಕ್ರಮ ಕೈಗೊಳ್ಳಿ.', pestMediumAdvice: 'ಕೀಟಗಳ ಚಟುವಟಿಕೆ ಮಧ್ಯಮವಾಗಿದೆ. ಗಮನಿಸುತ್ತಿರಿ.', pestLowAdvice: 'ಕೀಟದ ಅಪಾಯ ಕಡಿಮೆಯಿದೆ.',
+          soilPrefix: 'ಮಣ್ಣಿನ ವಿಧ', soilGuidanceLoamy: 'ಲೋಮಿ ಮಣ್ಣು ನೀರಿನ ಹರಿವು ಮತ್ತು ತೇವಾಂಶದ ಸಮತೋಲನ ಕಾಯ್ದುಕೊಳ್ಳುತ್ತದೆ.', soilGuidanceSandy: 'ಮರಳು ಮಣ್ಣಿನಲ್ಲಿ ನೀರು ಬೇಗ ಹರಿಯುತ್ತದೆ; ತೇವಾಂಶವನ್ನು ಆಗಾಗ ಪರಿಶೀಲಿಸಿ.',
+          soilGuidanceClay: 'ಜೇಡಿ ಮಣ್ಣು ನೀರನ್ನು ಹಿಡಿದಿಡುತ್ತದೆ; ಅತಿಯಾಗಿ ನೀರು ಹಾಕಬೇಡಿ.', soilGuidanceSilty: 'ಸಿಲ್ಟ್ ಮಣ್ಣು ತೇವಾಂಶವನ್ನು ಹಿಡಿದಿಡುತ್ತದೆ; ನೀರಿನ ಹರಿವು ಗಮನಿಸಿ, ಮಣ್ಣು ಗಟ್ಟಿಯಾಗದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.'
+        },
+        ml: {
+          language: 'ഭാഷ', farmerDashboard: 'കർഷക ഡാഷ്ബോർഡ്', liveAlerts: 'തത്സമയ മുന്നറിയിപ്പുകൾ', smartFarming: 'സ്മാർട്ട് കൃഷി', dismissNotification: 'അറിയിപ്പ് ഒഴിവാക്കുക',
+          heroTitle: 'വിള, മണ്ണ്, കൃഷിയിടത്തിന്റെ ആരോഗ്യം വേഗത്തിൽ നിരീക്ഷിക്കുക.', heroLead: 'വിളകൾ ആരോഗ്യത്തോടെ വളരാനും ജലസേചനം മെച്ചപ്പെടുത്താനും വരണ്ട ഭൂമി, കുറഞ്ഞ ഈർപ്പം, കീടഭീഷണി എന്നിവ നേരത്തേ കണ്ടെത്തുക.',
+          addFieldReport: 'കൃഷിയിട റിപ്പോർട്ട് ചേർക്കുക', viewAlerts: 'മുന്നറിയിപ്പുകൾ കാണുക', fieldStatus: 'കൃഷിയിട നില', healthy: 'ആരോഗ്യം', soilMoisture: 'മണ്ണിലെ ഈർപ്പം', humidity: 'വായുവിലെ ഈർപ്പം',
+          fieldMoisture: 'കൃഷിയിടത്തിലെ ഈർപ്പം', dryLand: 'വരണ്ട ഭൂമി', zones: 'മേഖലകൾ', pestRisk: 'കീടഭീഷണി', low: 'കുറവ്', waterNeeded: 'ആവശ്യമായ വെള്ളം', hours: 'മണിക്കൂർ',
+          fieldOverview: 'കൃഷിയിട വിവരം', needsCheck: 'പരിശോധിക്കണം', northPlot: 'വടക്കൻ കൃഷിയിടം', riceField: 'നെൽപ്പാടം', southPlot: 'തെക്കൻ കൃഷിയിടം', wheatField: 'ഗോതമ്പ് കൃഷിയിടം',
+          dry: 'വരണ്ടത്', eastPlot: 'കിഴക്കൻ കൃഷിയിടം', tomatoField: 'തക്കാളി കൃഷിയിടം', pestAlert: 'കീട മുന്നറിയിപ്പ്', newReport: 'പുതിയ റിപ്പോർട്ട്', fieldName: 'കൃഷിയിടത്തിന്റെ പേര്', cropType: 'വിളയുടെ ഇനം', defaultFieldName: 'തെക്കൻ കൃഷിയിടം', defaultCropType: 'ഗോതമ്പ്',
+          soilMoisturePercent: 'മണ്ണിലെ ഈർപ്പം (%)', pestLevel: 'കീടനില', medium: 'മിതം', high: 'കൂടുതൽ', soilType: 'മണ്ണിന്റെ ഇനം', loamy: 'ലോമി മണ്ണ്', sandy: 'മണൽ മണ്ണ്', clay: 'കളിമണ്ണ്', silty: 'എക്കൽ മണ്ണ്',
+          analyzeField: 'കൃഷിയിടം വിശകലനം ചെയ്യുക', recommendation: 'ശുപാർശ', initialRecommendation: 'ഈ കൃഷിയിടത്തിലെ മണ്ണ് വരണ്ടതും കീടങ്ങളുടെ സാന്നിധ്യം കൂടുതലുമാണ്. ഉടൻ നനച്ച് ഇലകളിലെ കേടുപാടുകൾ പരിശോധിക്കുക.',
+          recentAlerts: 'സമീപകാല മുന്നറിയിപ്പുകൾ', leafDamage: 'ഇലകളിൽ കേടുപാടുകൾ കണ്ടെത്തി. കീടനാശിനി ഉപയോഗം വിലയിരുത്തുക.', irrigationBeforeEvening: 'ഈർപ്പം കുറവാണ്. വൈകുന്നേരത്തിന് മുമ്പ് നനയ്ക്കുക.',
+          moistureStable: 'ഈർപ്പം സ്ഥിരമാണ്; വിള ആരോഗ്യകരമായി കാണപ്പെടുന്നു.', helpSupport: 'കർഷക സഹായം', nearbyCenter: 'അടുത്തുള്ള ഗവേഷണ കേന്ദ്രം',
+          centerName: 'കൃഷി വിജ്ഞാന കേന്ദ്രം, ജില്ലാ കൃഷി ഓഫീസ്', address: 'വിലാസം: മെയിൻ മാർക്കറ്റ് റോഡ്, ബസ് സ്റ്റാൻഡിന് സമീപം', call: 'വിളിക്കുക', emergencySupport: 'അടിയന്തര സഹായം',
+          urgentHelp: 'കൃഷിയിടത്തിലെ അടിയന്തര പ്രശ്നങ്ങൾക്കും കീടാക്രമണത്തിനും ജലസേചന സഹായത്തിനും.', helpline: 'സഹായ നമ്പർ', contactMe: 'ബന്ധപ്പെടുക',
+          veryDry: 'മണ്ണ് വളരെ വരണ്ടതാണ്. ഉടൻ വെള്ളം നൽകുക.', moistureLowAdvice: 'മണ്ണിലെ ഈർപ്പം കുറവാണ്. ഉടൻ നനയ്ക്കുക.', moistureOkay: 'ഇപ്പോൾ മണ്ണിലെ ഈർപ്പം മതിയായതാണ്.',
+          pestHighAdvice: 'കീടങ്ങളുടെ സാന്നിധ്യം കൂടുതലാണ്. വിള പരിശോധിച്ച് പ്രതിരോധ നടപടികൾ സ്വീകരിക്കുക.', pestMediumAdvice: 'കീടങ്ങളുടെ സാന്നിധ്യം മിതമാണ്. നിരീക്ഷണം തുടരുക.', pestLowAdvice: 'കീടഭീഷണി കുറവാണ്.',
+          soilPrefix: 'മണ്ണിന്റെ ഇനം', soilGuidanceLoamy: 'ലോമി മണ്ണ് നീർവാർച്ചയും ഈർപ്പവും സന്തുലിതമാക്കുന്നു.', soilGuidanceSandy: 'മണൽ മണ്ണിൽ വെള്ളം വേഗം ഒഴുകിപ്പോകും; ഈർപ്പം ഇടയ്ക്കിടെ പരിശോധിക്കുക.',
+          soilGuidanceClay: 'കളിമണ്ണ് വെള്ളം നിലനിർത്തും; അധികം നനയ്ക്കുന്നത് ഒഴിവാക്കുക.', soilGuidanceSilty: 'എക്കൽ മണ്ണ് ഈർപ്പം നിലനിർത്തും; നീർവാർച്ച ശ്രദ്ധിക്കുകയും മണ്ണ് അമരുന്നത് ഒഴിവാക്കുകയും ചെയ്യുക.'
+        },
+        mr: {
+          language: 'भाषा', farmerDashboard: 'शेतकरी डॅशबोर्ड', liveAlerts: 'थेट सूचना', smartFarming: 'स्मार्ट शेती', dismissNotification: 'सूचना बंद करा',
+          heroTitle: 'पिके, माती आणि शेताचे आरोग्य जलद तपासा.', heroLead: 'पिके निरोगी राहावीत आणि सिंचन अधिक योग्य व्हावे यासाठी कोरडी जमीन, कमी ओलावा आणि किडींचा धोका लवकर ओळखा.',
+          addFieldReport: 'शेताचा अहवाल जोडा', viewAlerts: 'सूचना पहा', fieldStatus: 'शेताची स्थिती', healthy: 'निरोगी', soilMoisture: 'मातीतील ओलावा', humidity: 'हवेतील आर्द्रता',
+          fieldMoisture: 'शेतातील ओलावा', dryLand: 'कोरडी जमीन', zones: 'भाग', pestRisk: 'किडींचा धोका', low: 'कमी', waterNeeded: 'आवश्यक पाणी', hours: 'तास',
+          fieldOverview: 'शेताचा आढावा', needsCheck: 'तपासणी आवश्यक', northPlot: 'उत्तर शेत', riceField: 'भातशेती', southPlot: 'दक्षिण शेत', wheatField: 'गहू शेती',
+          dry: 'कोरडे', eastPlot: 'पूर्व शेत', tomatoField: 'टोमॅटो शेती', pestAlert: 'कीड सूचना', newReport: 'नवीन अहवाल', fieldName: 'शेताचे नाव', cropType: 'पिकाचा प्रकार', defaultFieldName: 'दक्षिण शेत', defaultCropType: 'गहू',
+          soilMoisturePercent: 'मातीतील ओलावा (%)', pestLevel: 'किडींची पातळी', medium: 'मध्यम', high: 'जास्त', soilType: 'मातीचा प्रकार', loamy: 'पोयट्याची', sandy: 'वाळूमिश्रित', clay: 'चिकणमाती', silty: 'गाळाची',
+          analyzeField: 'शेताचे विश्लेषण करा', recommendation: 'शिफारस', initialRecommendation: 'या शेतातील माती कोरडी आहे आणि किडींचा प्रादुर्भाव जास्त आहे. त्वरित पाणी द्या आणि पानांची तपासणी करा.',
+          recentAlerts: 'अलीकडील सूचना', leafDamage: 'पानांचे नुकसान आढळले. कीटकनाशक वापराचा आढावा घ्या.', irrigationBeforeEvening: 'ओलावा कमी आहे. संध्याकाळपूर्वी पाणी द्या.',
+          moistureStable: 'ओलावा स्थिर आहे आणि पीक निरोगी दिसते.', helpSupport: 'शेतकरी मदत', nearbyCenter: 'जवळचे संशोधन केंद्र',
+          centerName: 'कृषी विज्ञान केंद्र, जिल्हा कृषी कार्यालय', address: 'पत्ता: मेन मार्केट रोड, बस स्थानकाजवळ', call: 'फोन करा', emergencySupport: 'तातडीची मदत',
+          urgentHelp: 'शेतातील तातडीच्या समस्या, कीड हल्ला किंवा सिंचन मदतीसाठी.', helpline: 'मदत क्रमांक', contactMe: 'संपर्क करा',
+          veryDry: 'माती खूप कोरडी आहे. त्वरित पाणी द्या.', moistureLowAdvice: 'मातीतील ओलावा कमी आहे. लवकर सिंचन करा.', moistureOkay: 'सध्या मातीतील ओलावा योग्य आहे.',
+          pestHighAdvice: 'किडींचा प्रादुर्भाव जास्त आहे. पिकांची तपासणी करून प्रतिबंधक उपाय करा.', pestMediumAdvice: 'किडींचा प्रादुर्भाव मध्यम आहे. लक्ष ठेवा.', pestLowAdvice: 'किडींचा धोका कमी आहे.',
+          soilPrefix: 'मातीचा प्रकार', soilGuidanceLoamy: 'पोयट्याची माती पाण्याचा निचरा आणि ओलावा यांचा समतोल राखते.', soilGuidanceSandy: 'वाळूमिश्रित मातीतून पाणी लवकर निघते; ओलावा वारंवार तपासा.',
+          soilGuidanceClay: 'चिकणमाती पाणी धरून ठेवते; जास्त पाणी देणे टाळा.', soilGuidanceSilty: 'गाळाची माती ओलावा धरून ठेवते; निचरा पाहा आणि माती घट्ट होऊ देऊ नका.'
+        },
+        bn: {
+          language: 'ভাষা', farmerDashboard: 'কৃষক ড্যাশবোর্ড', liveAlerts: 'সরাসরি সতর্কতা', smartFarming: 'স্মার্ট কৃষি', dismissNotification: 'বিজ্ঞপ্তি বন্ধ করুন',
+          heroTitle: 'ফসল, মাটি ও জমির স্বাস্থ্য দ্রুত পর্যবেক্ষণ করুন।', heroLead: 'ফসল সুস্থ রাখতে এবং সেচ উন্নত করতে শুকনো জমি, কম আর্দ্রতা ও পোকার ঝুঁকি আগে থেকেই শনাক্ত করুন।',
+          addFieldReport: 'জমির রিপোর্ট যোগ করুন', viewAlerts: 'সতর্কতা দেখুন', fieldStatus: 'জমির অবস্থা', healthy: 'সুস্থ', soilMoisture: 'মাটির আর্দ্রতা', humidity: 'বাতাসের আর্দ্রতা',
+          fieldMoisture: 'জমির আর্দ্রতা', dryLand: 'শুকনো জমি', zones: 'এলাকা', pestRisk: 'পোকার ঝুঁকি', low: 'কম', waterNeeded: 'প্রয়োজনীয় পানি', hours: 'ঘণ্টা',
+          fieldOverview: 'জমির বিবরণ', needsCheck: 'পরীক্ষা করা দরকার', northPlot: 'উত্তরের জমি', riceField: 'ধানের জমি', southPlot: 'দক্ষিণের জমি', wheatField: 'গমের জমি',
+          dry: 'শুকনো', eastPlot: 'পূর্বের জমি', tomatoField: 'টমেটোর জমি', pestAlert: 'পোকার সতর্কতা', newReport: 'নতুন রিপোর্ট', fieldName: 'জমির নাম', cropType: 'ফসলের ধরন', defaultFieldName: 'দক্ষিণের জমি', defaultCropType: 'গম',
+          soilMoisturePercent: 'মাটির আর্দ্রতা (%)', pestLevel: 'পোকার মাত্রা', medium: 'মাঝারি', high: 'বেশি', soilType: 'মাটির ধরন', loamy: 'দোআঁশ', sandy: 'বেলে', clay: 'এঁটেল', silty: 'পলিমাটি',
+          analyzeField: 'জমি বিশ্লেষণ করুন', recommendation: 'পরামর্শ', initialRecommendation: 'এই জমির মাটি শুকনো এবং পোকার উপদ্রব বেশি। এখনই সেচ দিন এবং পাতায় ক্ষতি আছে কি না দেখুন।',
+          recentAlerts: 'সাম্প্রতিক সতর্কতা', leafDamage: 'পাতার ক্ষতি শনাক্ত হয়েছে। কীটনাশক ব্যবহারের বিষয়টি পর্যালোচনা করুন।', irrigationBeforeEvening: 'আর্দ্রতা কম। সন্ধ্যার আগে সেচ দিন।',
+          moistureStable: 'আর্দ্রতা স্থিতিশীল এবং ফসল সুস্থ দেখাচ্ছে।', helpSupport: 'কৃষক সহায়তা', nearbyCenter: 'কাছের গবেষণা কেন্দ্র',
+          centerName: 'কৃষি বিজ্ঞান কেন্দ্র, জেলা কৃষি দপ্তর', address: 'ঠিকানা: মেইন মার্কেট রোড, বাসস্ট্যান্ডের কাছে', call: 'ফোন করুন', emergencySupport: 'জরুরি সহায়তা',
+          urgentHelp: 'জমির জরুরি সমস্যা, পোকার আক্রমণ বা সেচের সহায়তার জন্য।', helpline: 'হেল্পলাইন', contactMe: 'যোগাযোগ করুন',
+          veryDry: 'মাটি খুব শুকনো। এখনই জমিতে পানি দিন।', moistureLowAdvice: 'মাটির আর্দ্রতা কম। শিগগির সেচ দিন।', moistureOkay: 'এখন মাটির আর্দ্রতা গ্রহণযোগ্য।',
+          pestHighAdvice: 'পোকার উপদ্রব বেশি। ফসল পরীক্ষা করে প্রতিরোধমূলক ব্যবস্থা নিন।', pestMediumAdvice: 'পোকার উপদ্রব মাঝারি। নজর রাখুন।', pestLowAdvice: 'পোকার ঝুঁকি কম।',
+          soilPrefix: 'মাটির ধরন', soilGuidanceLoamy: 'দোআঁশ মাটি পানি নিষ্কাশন ও আর্দ্রতার ভারসাম্য রাখে।', soilGuidanceSandy: 'বেলে মাটিতে পানি দ্রুত নেমে যায়; আর্দ্রতা ঘন ঘন পরীক্ষা করুন।',
+          soilGuidanceClay: 'এঁটেল মাটি পানি ধরে রাখে; অতিরিক্ত সেচ এড়িয়ে চলুন।', soilGuidanceSilty: 'পলিমাটি আর্দ্রতা ধরে রাখে; পানি নিষ্কাশন দেখুন এবং মাটি শক্ত হওয়া এড়ান।'
+        }
+      };
+
+      const cropNames = {
+        en: { wheat: 'wheat', rice: 'rice', tomato: 'tomato' },
+        hi: { 'गेहूँ': 'wheat', 'धान': 'rice', 'टमाटर': 'tomato' },
+        te: { 'గోధుమ': 'wheat', 'వరి': 'rice', 'టమాటా': 'tomato' },
+        ta: { 'கோதுமை': 'wheat', 'நெல்': 'rice', 'தக்காளி': 'tomato' },
+        kn: { 'ಗೋಧಿ': 'wheat', 'ಭತ್ತ': 'rice', 'ಟೊಮೇಟೊ': 'tomato' },
+        ml: { 'ഗോതമ്പ്': 'wheat', 'നെല്ല്': 'rice', 'തക്കാളി': 'tomato' },
+        mr: { 'गहू': 'wheat', 'भात': 'rice', 'टोमॅटो': 'tomato' },
+        bn: { 'গম': 'wheat', 'ধান': 'rice', 'টমেটো': 'tomato' }
+      };
+
+      const cropGuidance = {
+        en: {
+          fertilizerLabel: 'Fertilizer',
+          wheat: 'Wheat: Add mature compost. Use urea (nitrogen) and DAP (phosphorus) only at soil-test or local extension rates; split nitrogen applications.',
+          rice: 'Rice: Add compost. Use urea (N), DAP (P), or MOP/potash (K) only when soil-test or local extension advice calls for them; split nitrogen and prevent runoff.',
+          tomato: 'Tomato: Add mature compost. Choose an NPK fertilizer from soil-test results and crop stage; avoid excess nitrogen.',
+          general: 'Crop not recognized: use mature compost and get a soil test before choosing a crop-specific NPK fertilizer.',
+          pestLabel: 'Pest-safe care',
+          pestCare: 'Identify the pest before treatment. Scout regularly, remove badly affected parts, keep the field clean, rotate crops or use suitable traps, and protect beneficial insects. Use only a locally registered product for the confirmed crop and pest, exactly as its label directs; do not spray preventively.',
+          soilLabel: 'Protect the soil',
+          soilCare: 'Follow soil-test and product-label rates. Do not over-apply or spread fertilizer before heavy rain or near waterways. Keep soil covered with crop residue or compost; avoid burning residues.'
+        },
+        hi: {
+          fertilizerLabel: 'उर्वरक',
+          wheat: 'गेहूँ: अच्छी तरह सड़ी खाद डालें। यूरिया (नाइट्रोजन) और DAP (फॉस्फोरस) का उपयोग केवल मिट्टी जाँच या कृषि विशेषज्ञ की सलाह के अनुसार करें; नाइट्रोजन को कई बार में दें।',
+          rice: 'धान: खाद डालें। यूरिया (N), DAP (P) या MOP/पोटाश (K) का उपयोग मिट्टी जाँच या कृषि विशेषज्ञ की सलाह पर ही करें; नाइट्रोजन कई बार में दें और बहाव रोकें।',
+          tomato: 'टमाटर: अच्छी तरह सड़ी खाद डालें। मिट्टी जाँच और फसल की अवस्था के अनुसार NPK चुनें; अधिक नाइट्रोजन न दें।',
+          general: 'फसल की पहचान नहीं हुई: अच्छी तरह सड़ी खाद डालें और फसल-विशेष NPK चुनने से पहले मिट्टी की जाँच कराएँ।',
+          pestLabel: 'कीटों से सुरक्षित देखभाल',
+          pestCare: 'उपचार से पहले कीट की पहचान करें। नियमित जाँच करें, बहुत प्रभावित हिस्से हटाएँ, खेत साफ रखें, फसल चक्र या उपयुक्त ट्रैप अपनाएँ और लाभकारी कीटों को बचाएँ। केवल पुष्टि किए गए कीट और फसल के लिए स्थानीय रूप से पंजीकृत उत्पाद का लेबल के अनुसार उपयोग करें; बिना जरूरत छिड़काव न करें।',
+          soilLabel: 'मिट्टी की सुरक्षा',
+          soilCare: 'मिट्टी जाँच और उत्पाद के लेबल की मात्रा मानें। अधिक उर्वरक न डालें और भारी बारिश से पहले या जलस्रोतों के पास न डालें। मिट्टी को फसल अवशेष या खाद से ढकें; अवशेष न जलाएँ।'
+        },
+        te: {
+          fertilizerLabel: 'ఎరువులు',
+          wheat: 'గోధుమ: బాగా కుళ్లిన కంపోస్ట్ వేయండి. నేల పరీక్ష లేదా వ్యవసాయ నిపుణుల సూచన మేరకే యూరియా (నైట్రోజన్), DAP (భాస్వరం) వాడండి; నైట్రోజన్‌ను విడతలుగా వేయండి.',
+          rice: 'వరి: కంపోస్ట్ వేయండి. నేల పరీక్ష లేదా నిపుణుల సూచన ఉంటేనే యూరియా (N), DAP (P), MOP/పొటాష్ (K) వాడండి; నైట్రోజన్‌ను విడతలుగా వేసి నీటితో కొట్టుకుపోకుండా చూడండి.',
+          tomato: 'టమాటా: బాగా కుళ్లిన కంపోస్ట్ వేయండి. నేల పరీక్ష, పంట దశను బట్టి NPK ఎంచుకోండి; నైట్రోజన్ అధికంగా వేయవద్దు.',
+          general: 'పంట గుర్తించబడలేదు: బాగా కుళ్లిన కంపోస్ట్ వాడండి; పంటకు తగిన NPK ఎంచుకునే ముందు నేల పరీక్ష చేయించండి.',
+          pestLabel: 'పురుగుల నుంచి సురక్షిత సంరక్షణ',
+          pestCare: 'చికిత్సకు ముందు పురుగును గుర్తించండి. తరచూ పరిశీలించండి, బాగా దెబ్బతిన్న భాగాలను తొలగించండి, పొలాన్ని శుభ్రంగా ఉంచండి, పంట మార్పిడి లేదా సరైన ఉచ్చులు వాడండి, మేలు చేసే కీటకాలను కాపాడండి. గుర్తించిన పంట, పురుగుకు స్థానికంగా అనుమతించిన మందునే లేబుల్ ప్రకారం వాడండి; ముందస్తుగా మందు పిచికారీ చేయవద్దు.',
+          soilLabel: 'నేలను కాపాడండి',
+          soilCare: 'నేల పరీక్ష, ఉత్పత్తి లేబుల్ సూచించిన మోతాదులనే పాటించండి. అధిక ఎరువు వేయవద్దు; భారీ వర్షానికి ముందు లేదా నీటి వనరుల దగ్గర వేయవద్దు. పంట అవశేషాలు లేదా కంపోస్ట్‌తో నేలను కప్పండి; అవశేషాలను కాల్చవద్దు.'
+        },
+        ta: {
+          fertilizerLabel: 'உரங்கள்',
+          wheat: 'கோதுமை: நன்கு மக்கிய உரம் இடுங்கள். மண் பரிசோதனை அல்லது வேளாண் ஆலோசனைப்படி மட்டுமே யூரியா (நைட்ரஜன்), DAP (பாஸ்பரஸ்) பயன்படுத்தி, நைட்ரஜனைப் பிரித்து இடுங்கள்.',
+          rice: 'நெல்: மக்கிய உரம் இடுங்கள். மண் பரிசோதனை அல்லது ஆலோசனை பரிந்துரைத்தால் மட்டுமே யூரியா (N), DAP (P), MOP/பொட்டாஷ் (K) பயன்படுத்துங்கள்; நைட்ரஜனைப் பிரித்து இடுவதுடன் நீர் ஓட்டத்தையும் தடுக்கவும்.',
+          tomato: 'தக்காளி: நன்கு மக்கிய உரம் இடுங்கள். மண் பரிசோதனை மற்றும் பயிர் வளர்நிலைக்கு ஏற்ப NPK உரத்தைத் தேர்ந்தெடுத்து, அதிக நைட்ரஜனைத் தவிர்க்கவும்.',
+          general: 'பயிர் அடையாளம் காணப்படவில்லை: மக்கிய உரம் பயன்படுத்தி, பயிருக்கு ஏற்ற NPK உரத்தைத் தேர்வுசெய்யும் முன் மண் பரிசோதனை செய்யுங்கள்.',
+          pestLabel: 'பூச்சி பாதுகாப்பு',
+          pestCare: 'சிகிச்சைக்கு முன் பூச்சியை அடையாளம் காணுங்கள். தொடர்ந்து கண்காணித்து, அதிகம் பாதித்த பகுதிகளை அகற்றி, வயலைச் சுத்தமாக வைத்து, பயிர் சுழற்சி அல்லது பொருத்தமான பொறிகளைப் பயன்படுத்தி நன்மை செய்யும் பூச்சிகளைப் பாதுகாக்கவும். உறுதிப்படுத்திய பயிர் மற்றும் பூச்சிக்கு உள்ளூரில் பதிவு செய்யப்பட்ட மருந்தை அதன் லேபிள்படி மட்டுமே பயன்படுத்துங்கள்; முன்கூட்டியே தெளிக்க வேண்டாம்.',
+          soilLabel: 'மண்ணைப் பாதுகாக்கவும்',
+          soilCare: 'மண் பரிசோதனை மற்றும் தயாரிப்பு லேபிள் அளவுகளைப் பின்பற்றுங்கள். அதிக உரம் இடாதீர்கள்; கனமழைக்கு முன்பும் நீர்நிலைகள் அருகிலும் இடாதீர்கள். பயிர் எச்சம் அல்லது மக்கிய உரத்தால் மண்ணை மூடி, எச்சங்களை எரிக்காதீர்கள்.'
+        },
+        kn: {
+          fertilizerLabel: 'ಗೊಬ್ಬರ',
+          wheat: 'ಗೋಧಿ: ಚೆನ್ನಾಗಿ ಕೊಳೆತ ಕಾಂಪೋಸ್ಟ್ ಬಳಸಿ. ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಅಥವಾ ಕೃಷಿ ತಜ್ಞರ ಸಲಹೆಯಂತೆ ಮಾತ್ರ ಯೂರಿಯಾ (ನೈಟ್ರೋಜನ್), DAP (ರಂಜಕ) ಬಳಸಿ; ನೈಟ್ರೋಜನ್ ಅನ್ನು ಹಲವು ಹಂತಗಳಲ್ಲಿ ಹಾಕಿ.',
+          rice: 'ಭತ್ತ: ಕಾಂಪೋಸ್ಟ್ ಬಳಸಿ. ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಅಥವಾ ತಜ್ಞರ ಸಲಹೆ ಇದ್ದಾಗ ಮಾತ್ರ ಯೂರಿಯಾ (N), DAP (P), MOP/ಪೊಟ್ಯಾಶ್ (K) ಬಳಸಿ; ನೈಟ್ರೋಜನ್ ಅನ್ನು ಹಂತ ಹಂತವಾಗಿ ಹಾಕಿ, ನೀರಿನ ಹರಿವನ್ನು ತಡೆಯಿರಿ.',
+          tomato: 'ಟೊಮೇಟೊ: ಚೆನ್ನಾಗಿ ಕೊಳೆತ ಕಾಂಪೋಸ್ಟ್ ಬಳಸಿ. ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಮತ್ತು ಬೆಳೆ ಹಂತದಂತೆ NPK ಗೊಬ್ಬರ ಆರಿಸಿ; ಅತಿಯಾದ ನೈಟ್ರೋಜನ್ ತಪ್ಪಿಸಿ.',
+          general: 'ಬೆಳೆ ಗುರುತಿಸಲಾಗಿಲ್ಲ: ಚೆನ್ನಾಗಿ ಕೊಳೆತ ಕಾಂಪೋಸ್ಟ್ ಬಳಸಿ; ಬೆಳೆಗನುಗುಣ NPK ಆಯ್ಕೆಗೂ ಮೊದಲು ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ.',
+          pestLabel: 'ಕೀಟಗಳಿಂದ ಸುರಕ್ಷಿತ ಆರೈಕೆ',
+          pestCare: 'ಚಿಕಿತ್ಸೆಗೆ ಮೊದಲು ಕೀಟವನ್ನು ಗುರುತಿಸಿ. ನಿಯಮಿತವಾಗಿ ಪರಿಶೀಲಿಸಿ, ಹೆಚ್ಚು ಹಾನಿಯಾದ ಭಾಗಗಳನ್ನು ತೆಗೆದುಹಾಕಿ, ಹೊಲವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ, ಬೆಳೆ ಪರಿವರ್ತನೆ ಅಥವಾ ಸೂಕ್ತ ಬಲೆ ಬಳಸಿ, ಉಪಕಾರಿ ಕೀಟಗಳನ್ನು ರಕ್ಷಿಸಿ. ಗುರುತಿಸಿದ ಬೆಳೆ ಮತ್ತು ಕೀಟಕ್ಕೆ ಸ್ಥಳೀಯವಾಗಿ ನೋಂದಾಯಿತ ಉತ್ಪನ್ನವನ್ನೇ ಲೇಬಲ್ ಪ್ರಕಾರ ಬಳಸಿ; ಮುನ್ನೆಚ್ಚರಿಕೆಯಾಗಿ ಸಿಂಪಡಿಸಬೇಡಿ.',
+          soilLabel: 'ಮಣ್ಣನ್ನು ರಕ್ಷಿಸಿ',
+          soilCare: 'ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ ಮತ್ತು ಉತ್ಪನ್ನದ ಲೇಬಲ್ ಪ್ರಮಾಣ ಪಾಲಿಸಿ. ಅತಿಯಾಗಿ ಗೊಬ್ಬರ ಹಾಕಬೇಡಿ; ಭಾರಿ ಮಳೆಯ ಮೊದಲು ಅಥವಾ ಜಲಮೂಲಗಳ ಬಳಿ ಹಾಕಬೇಡಿ. ಬೆಳೆ ಅವಶೇಷ ಅಥವಾ ಕಾಂಪೋಸ್ಟ್‌ನಿಂದ ಮಣ್ಣನ್ನು ಮುಚ್ಚಿ; ಅವಶೇಷ ಸುಡಬೇಡಿ.'
+        },
+        ml: {
+          fertilizerLabel: 'വളങ്ങൾ',
+          wheat: 'ഗോതമ്പ്: നന്നായി അഴുകിയ കമ്പോസ്റ്റ് ചേർക്കുക. മണ്ണ് പരിശോധനയുടെയോ കൃഷി വിദഗ്ധന്റെ നിർദേശത്തിന്റെയോ അടിസ്ഥാനത്തിൽ മാത്രം യൂറിയ (നൈട്രജൻ), DAP (ഫോസ്ഫറസ്) ഉപയോഗിച്ച് നൈട്രജൻ പല ഘട്ടങ്ങളായി നൽകുക.',
+          rice: 'നെല്ല്: കമ്പോസ്റ്റ് ചേർക്കുക. മണ്ണ് പരിശോധനയോ വിദഗ്ധ നിർദേശമോ ഉണ്ടെങ്കിൽ മാത്രം യൂറിയ (N), DAP (P), MOP/പൊട്ടാഷ് (K) ഉപയോഗിക്കുക; നൈട്രജൻ ഘട്ടംഘട്ടമായി നൽകി ഒഴുക്ക് തടയുക.',
+          tomato: 'തക്കാളി: നന്നായി അഴുകിയ കമ്പോസ്റ്റ് ചേർക്കുക. മണ്ണ് പരിശോധനയും വിളയുടെ വളർച്ചാ ഘട്ടവും അനുസരിച്ച് NPK തിരഞ്ഞെടുക്കുക; അധിക നൈട്രജൻ ഒഴിവാക്കുക.',
+          general: 'വിള തിരിച്ചറിഞ്ഞിട്ടില്ല: നന്നായി അഴുകിയ കമ്പോസ്റ്റ് ഉപയോഗിക്കുക; വിളയ്ക്കുള്ള NPK തിരഞ്ഞെടുക്കുന്നതിന് മുമ്പ് മണ്ണ് പരിശോധിക്കുക.',
+          pestLabel: 'കീടങ്ങളെ സുരക്ഷിതമായി നിയന്ത്രിക്കുക',
+          pestCare: 'ചികിത്സയ്ക്ക് മുമ്പ് കീടത്തെ തിരിച്ചറിയുക. പതിവായി പരിശോധിച്ച് ഗുരുതരമായി ബാധിച്ച ഭാഗങ്ങൾ നീക്കുക, കൃഷിയിടം വൃത്തിയായി സൂക്ഷിക്കുക, വിളമാറ്റമോ അനുയോജ്യമായ കെണികളോ ഉപയോഗിക്കുക, ഉപകാരികളായ കീടങ്ങളെ സംരക്ഷിക്കുക. തിരിച്ചറിഞ്ഞ വിളയ്ക്കും കീടത്തിനും പ്രാദേശികമായി അംഗീകൃതമായ ഉൽപ്പന്നം ലേബൽപ്രകാരം മാത്രം ഉപയോഗിക്കുക; മുൻകരുതലായി തളിക്കരുത്.',
+          soilLabel: 'മണ്ണ് സംരക്ഷിക്കുക',
+          soilCare: 'മണ്ണ് പരിശോധനയും ഉൽപ്പന്ന ലേബലിലെ അളവും പാലിക്കുക. അധിക വളം ചേർക്കരുത്; കനത്ത മഴയ്ക്ക് മുമ്പോ ജലസ്രോതസ്സുകൾക്കരികിലോ ചേർക്കരുത്. വിളാവശിഷ്ടമോ കമ്പോസ്റ്റോ ഉപയോഗിച്ച് മണ്ണ് മൂടുക; അവശിഷ്ടങ്ങൾ കത്തിക്കരുത്.'
+        },
+        mr: {
+          fertilizerLabel: 'खते',
+          wheat: 'गहू: पूर्ण कुजलेले कंपोस्ट वापरा. माती परीक्षण किंवा कृषी तज्ज्ञांच्या सल्ल्यानुसारच युरिया (नायट्रोजन) आणि DAP (स्फुरद) वापरा; नायट्रोजन हप्त्यांमध्ये द्या.',
+          rice: 'भात: कंपोस्ट वापरा. माती परीक्षण किंवा तज्ज्ञांच्या सल्ल्यानुसारच युरिया (N), DAP (P), MOP/पालाश (K) वापरा; नायट्रोजन हप्त्यांमध्ये द्या आणि पाण्यासोबत वाहून जाणे रोखा.',
+          tomato: 'टोमॅटो: पूर्ण कुजलेले कंपोस्ट वापरा. माती परीक्षण आणि पिकाच्या अवस्थेनुसार NPK खत निवडा; जास्त नायट्रोजन टाळा.',
+          general: 'पीक ओळखलेले नाही: पूर्ण कुजलेले कंपोस्ट वापरा आणि पिकासाठी योग्य NPK निवडण्यापूर्वी माती परीक्षण करा.',
+          pestLabel: 'कीड सुरक्षितपणे नियंत्रित करा',
+          pestCare: 'उपचारापूर्वी किडीची ओळख पटवा. नियमित पाहणी करा, जास्त बाधित भाग काढा, शेत स्वच्छ ठेवा, पीक फेरपालट किंवा योग्य सापळे वापरा आणि उपयुक्त कीटकांचे संरक्षण करा. ओळखलेल्या पीक व किडीसाठी स्थानिकरीत्या नोंदणीकृत उत्पादन लेबलप्रमाणेच वापरा; प्रतिबंध म्हणून फवारणी करू नका.',
+          soilLabel: 'मातीचे संरक्षण',
+          soilCare: 'माती परीक्षण आणि उत्पादनाच्या लेबलवरील मात्रा पाळा. जास्त खत देऊ नका; मुसळधार पावसापूर्वी किंवा जलस्रोतांजवळ खत टाकू नका. पीक अवशेष किंवा कंपोस्टने माती झाका; अवशेष जाळू नका.'
+        },
+        bn: {
+          fertilizerLabel: 'সার',
+          wheat: 'গম: ভালোভাবে পচানো কম্পোস্ট দিন। মাটি পরীক্ষা বা কৃষি বিশেষজ্ঞের পরামর্শ অনুযায়ী ইউরিয়া (নাইট্রোজেন) ও DAP (ফসফরাস) ব্যবহার করুন; নাইট্রোজেন ভাগ করে দিন।',
+          rice: 'ধান: কম্পোস্ট দিন। মাটি পরীক্ষা বা বিশেষজ্ঞের পরামর্শ থাকলেই ইউরিয়া (N), DAP (P), MOP/পটাশ (K) ব্যবহার করুন; নাইট্রোজেন ভাগ করে দিন এবং সার ধুয়ে যাওয়া রোধ করুন।',
+          tomato: 'টমেটো: ভালোভাবে পচানো কম্পোস্ট দিন। মাটি পরীক্ষা ও ফসলের বৃদ্ধির ধাপ অনুযায়ী NPK সার বেছে নিন; অতিরিক্ত নাইট্রোজেন দেবেন না।',
+          general: 'ফসল শনাক্ত হয়নি: ভালোভাবে পচানো কম্পোস্ট ব্যবহার করুন এবং ফসল-উপযোগী NPK বাছার আগে মাটি পরীক্ষা করুন।',
+          pestLabel: 'নিরাপদে পোকা নিয়ন্ত্রণ',
+          pestCare: 'চিকিৎসার আগে পোকা শনাক্ত করুন। নিয়মিত নজর রাখুন, বেশি আক্রান্ত অংশ সরান, জমি পরিষ্কার রাখুন, ফসল পর্যায়ক্রমে চাষ বা উপযুক্ত ফাঁদ ব্যবহার করুন এবং উপকারী পোকা রক্ষা করুন। শনাক্ত করা ফসল ও পোকার জন্য স্থানীয়ভাবে অনুমোদিত পণ্য লেবেল মেনে ব্যবহার করুন; আগেভাগে কীটনাশক ছিটাবেন না।',
+          soilLabel: 'মাটি রক্ষা করুন',
+          soilCare: 'মাটি পরীক্ষা ও পণ্যের লেবেলে দেওয়া মাত্রা মানুন। অতিরিক্ত সার দেবেন না; ভারী বৃষ্টির আগে বা জলাশয়ের কাছে সার দেবেন না। ফসলের অবশিষ্টাংশ বা কম্পোস্ট দিয়ে মাটি ঢেকে রাখুন; অবশিষ্টাংশ পোড়াবেন না।'
+        }
+      };
+
+      const form = document.getElementById('farmForm');
+      const fieldNameInput = document.getElementById('fieldName');
+      const cropTypeInput = document.getElementById('cropType');
+      const moistureInput = document.getElementById('moisture');
+      const pestLevel = document.getElementById('pestLevel');
+      const soilTypeInput = document.getElementById('soilType');
+      const languageSelect = document.getElementById('languageSelect');
+      const resultText = document.getElementById('resultText');
+      const notificationBar = document.getElementById('notificationBar');
+      const dismissNotification = document.getElementById('dismissNotification');
+      let hasAnalyzed = false;
+      let currentLanguage = 'en';
+
+      function applyLanguage(language) {
+        const messages = translations[language] || translations.en;
+        const previousMessages = translations[currentLanguage] || translations.en;
+        if (fieldNameInput.value === previousMessages.defaultFieldName) {
+          fieldNameInput.value = messages.defaultFieldName;
+        }
+        if (cropTypeInput.value === previousMessages.defaultCropType) {
+          cropTypeInput.value = messages.defaultCropType;
+        }
+        currentLanguage = language;
+        document.documentElement.lang = language;
+        document.querySelectorAll('[data-i18n]').forEach(function (element) {
+          const key = element.dataset.i18n;
+          if (messages[key]) {
+            element.textContent = messages[key];
+          }
+        });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(function (element) {
+          const key = element.dataset.i18nAriaLabel;
+          if (messages[key]) {
+            element.setAttribute('aria-label', messages[key]);
+          }
+        });
+        languageSelect.value = language;
+        localStorage.setItem('agrisense-language', language);
+        if (hasAnalyzed) {
+          updateRecommendation(messages);
+        }
+      }
+
+      function updateRecommendation(messages) {
+        const moisture = Number(moistureInput.value);
+        const pest = pestLevel.value;
+        const soilType = soilTypeInput.value;
+        const language = languageSelect.value;
+        const cropName = cropTypeInput.value.trim();
+        const localizedCropNames = cropNames[language] || cropNames.en;
+        const cropKey = localizedCropNames[cropName] || cropNames.en[cropName.toLowerCase()] || 'general';
+        const guidance = cropGuidance[language] || cropGuidance.en;
+        const moistureAdvice = moisture < 35
+          ? messages.veryDry
+          : moisture < 60 ? messages.moistureLowAdvice : messages.moistureOkay;
+        const pestAdvice = pest === 'high'
+          ? messages.pestHighAdvice
+          : pest === 'medium' ? messages.pestMediumAdvice : messages.pestLowAdvice;
+
+        const fieldAdvice = `${moistureAdvice} ${pestAdvice} ${messages.soilPrefix}: ${messages[soilType]}. ${messages[`soilGuidance${soilType[0].toUpperCase()}${soilType.slice(1)}`]}`;
+        resultText.textContent = [
+          fieldAdvice,
+          `${guidance.fertilizerLabel}: ${guidance[cropKey]}`,
+          `${guidance.pestLabel}: ${guidance.pestCare}`,
+          `${guidance.soilLabel}: ${guidance.soilCare}`
+        ].join('\n\n');
+      }
+
+      languageSelect.addEventListener('change', function () {
+        applyLanguage(languageSelect.value);
+      });
+
+      dismissNotification.addEventListener('click', function () {
+        notificationBar.hidden = true;
+      });
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        hasAnalyzed = true;
+        updateRecommendation(translations[languageSelect.value] || translations.en);
+      });
+
+      const savedLanguage = localStorage.getItem('agrisense-language');
+      if (savedLanguage && translations[savedLanguage]) {
+        applyLanguage(savedLanguage);
+      }
+    </script>
+  </body>
+</html>cc

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MetaVision Glasses</title>
+  <style>
+    :root {
+      --bg: #07121b;
+      --bg-2: #0e1f2d;
+      --panel: rgba(17, 31, 42, 0.8);
+      --panel-strong: #132c3a;
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #edf8ff;
+      --muted: #9db7c6;
+      --accent: #7ef3d6;
+      --accent-2: #77a9ff;
+      --accent-3: #ffbb8b;
+      --shadow: rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(126, 243, 214, 0.15), transparent 25%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(7, 18, 27, 0.5);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .country-picker select {
+      appearance: none;
+      border-radius: 999px;
+      border: 1px solid rgba(126,243,214,0.3);
+      background: #132c3a;
+      color: var(--accent);
+      padding: 9px 32px 9px 13px;
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 20px rgba(126, 243, 214, 0.9);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      border: 1px solid rgba(126, 243, 214, 0.5);
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(126, 243, 214, 0.08);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .hero {
+      padding: 72px 0 50px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--accent);
+      background: rgba(126, 243, 214, 0.08);
+      border: 1px solid rgba(126, 243, 214, 0.2);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.76rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 4vw, 5rem);
+      line-height: 0.96;
+      margin: 0 0 20px;
+      letter-spacing: -0.06em;
+    }
+
+    .hero p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .button {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      padding: 15px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover { transform: translateY(-2px); }
+
+    .button.primary {
+      background: linear-gradient(135deg, var(--accent), #c2f9d4);
+      color: #072018;
+      box-shadow: 0 16px 35px rgba(126, 243, 214, 0.28);
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .stats {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .smartglass-scene {
+      position: relative;
+      min-height: 540px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .halo {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(119,169,255,0.3), rgba(119,169,255,0.05) 40%, transparent 70%);
+      filter: blur(12px);
+    }
+
+    .glasses-wrap {
+      position: relative;
+      width: 440px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 25px 45px rgba(0,0,0,0.45));
+    }
+
+    .frame {
+      position: absolute;
+      width: 100%;
+      height: 170px;
+      border: 8px solid rgba(230, 244, 255, 0.7);
+      border-radius: 38px;
+      background: linear-gradient(180deg, rgba(10,15,24,0.15), rgba(255,255,255,0.08));
+      box-shadow: inset 0 0 30px rgba(255,255,255,0.1);
+    }
+
+    .lens {
+      position: absolute;
+      width: 150px;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(126, 243, 214, 0.12), rgba(119, 169, 255, 0.18));
+      border: 4px solid rgba(255,255,255,0.2);
+      border-radius: 28px;
+      backdrop-filter: blur(10px);
+    }
+
+    .lens.left { left: 52px; }
+    .lens.right { right: 52px; }
+
+    .bridge {
+      position: absolute;
+      width: 110px;
+      height: 12px;
+      background: rgba(255,255,255,0.55);
+      border-radius: 999px;
+      top: 78px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .arm {
+      position: absolute;
+      width: 110px;
+      height: 8px;
+      background: rgba(255,255,255,0.6);
+      top: 82px;
+      border-radius: 999px;
+    }
+
+    .arm.left { left: -78px; transform: rotate(14deg); }
+    .arm.right { right: -78px; transform: rotate(-14deg); }
+
+    .floating-card {
+      position: absolute;
+      background: rgba(13, 30, 44, 0.85);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      padding: 16px 18px;
+    }
+
+    .floating-card.card-1 {
+      left: 20px;
+      bottom: 40px;
+      min-width: 180px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .floating-card.card-2 {
+      right: 14px;
+      top: 50px;
+      min-width: 180px;
+      animation: float 5s ease-in-out infinite reverse;
+    }
+
+    .mini-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .mini-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-14px); }
+    }
+
+    section {
+      padding: 32px 0 18px;
+    }
+
+    .section-head {
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(2rem, 2.8vw, 3rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px 18px;
+      min-height: 200px;
+    }
+
+    .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(126,243,214,0.18), rgba(119,169,255,0.18));
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .travel-demo {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-top: 28px;
+    }
+
+    .demo-panel {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 24px;
+    }
+
+    .menu-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px;
+      min-height: 360px;
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .menu-header h3 {
+      margin: 0;
+      font-size: 1.6rem;
+      letter-spacing: -0.04em;
+    }
+
+    .badge {
+      border-radius: 999px;
+      background: rgba(126,243,214,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(126,243,214,0.2);
+      padding: 7px 10px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .menu-item:last-child { border-bottom: none; }
+
+    .menu-item strong {
+      display: block;
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .menu-item span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .voice-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mic-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(126,243,214,0.25);
+      background: rgba(126,243,214,0.07);
+      color: var(--accent);
+      width: fit-content;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .mic {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 20px rgba(126,243,214,0.8);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.7; }
+    }
+
+    .transcript {
+      background: rgba(9,14,18,0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 188px;
+    }
+
+    .transcript h4 {
+      margin: 0 0 14px;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .prompt {
+      font-size: 1.12rem;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .reply {
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(119,169,255,0.08);
+      border: 1px solid rgba(119,169,255,0.14);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .demo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .demo-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.02);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .capture-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .moment {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      min-height: 160px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .moment::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(126,243,214,0.11), rgba(119,169,255,0.12));
+    }
+
+    .moment-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .moment h4 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .moment p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    footer {
+      padding: 30px 0 70px;
+      color: var(--muted);
+    }
+
+    .footer-row {
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .travel-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .features {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 42px; }
+      .features { grid-template-columns: 1fr; }
+      .capture-strip { grid-template-columns: 1fr; }
+      .nav { padding: 14px 0; }
+      .smartglass-scene { min-height: 420px; }
+      .glasses-wrap { transform: scale(0.82); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>MetaVision</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#travel">Travel</a>
+        <a href="#capture">Capture</a>
+        <a href="#shop">Shop</a>
+      </nav>
+      <a class="nav-cta" href="#shop">Pre-order</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Smart vision technology</div>
+        <h1>See more. Hear more. Explore anywhere.</h1>
+        <p>
+          MetaVision smart glasses are your everyday assistant at home or abroad. Understand menus,
+          signs, and conversations in different languages, answer questions, take calls, and capture
+          memories — all without pulling out your phone.
+        </p>
+
+        <div class="hero-actions">
+          <button class="button primary" type="button">Explore glasses</button>
+          <button class="button secondary" type="button">Watch demo</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>12h</strong>
+            Battery life
+          </div>
+          <div class="stat">
+            <strong>356°</strong>
+            Rotating camera view
+          </div>
+          <div class="stat">
+            <strong>4K</strong>
+            Hands-free capture
+          </div>
+        </div>
+      </div>
+
+      <div class="smartglass-scene" aria-label="Smart glasses concept image">
+        <div class="halo"></div>
+        <div class="glasses-wrap">
+          <div class="frame"></div>
+          <div class="lens left"></div>
+          <div class="lens right"></div>
+          <div class="bridge"></div>
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+        </div>
+
+        <div class="floating-card card-1">
+          <span class="mini-label">Live translation</span>
+          <div class="mini-value">"Hey Meta, read the menu."</div>
+        </div>
+
+        <div class="floating-card card-2">
+          <span class="mini-label">Call status</span>
+          <div class="mini-value">In Tokyo • 2:14 PM</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <h2>Built for a smarter day</h2>
+        <p>AI glasses designed for commuting, travel, work, and everyday life — lightweight, stylish, and always ready.</p>
+      </div>
+
+      <div class="features">
+        <article class="feature-card">
+          <div class="icon">🎧</div>
+          <h3>Live calls</h3>
+          <p>Answer calls in one tap and keep your hands free while walking, biking, or exploring the city.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon">🗣️</div>
+          <h3>AI assistant</h3>
+          <p>Ask questions, get instant summaries, directions, and context about what you’re seeing.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon">📷</div>
+          <h3>Capture moments</h3>
+          <p>Snap photos and short clips without reaching for your phone while you are in the moment.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon">🔄</div>
+          <h3>356° rotating view</h3>
+          <p>A concept camera rotates almost a full circle to help capture what is around you. It turns 356°, leaving a small 4° gap, while the glasses stay comfortably in place.</p>
+        </article>
+
+        <article class="feature-card">
+          <div class="icon">🌏</div>
+          <h3>Travel translation</h3>
+          <p>Understand menus, signs, and conversations in real time across languages and cities.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="travel">
+      <div class="section-head">
+        <h2>Feel at home, wherever you travel</h2>
+        <p>Explore Japan, Italy, France, India, Mexico, and more. Choose a destination to see how the glasses can help translate local menus and everyday moments.</p>
+      </div>
+
+      <div class="travel-demo">
+        <div class="demo-panel">
+          <div class="menu-card">
+            <div class="menu-header">
+              <h3>Restaurant Menu</h3>
+              <label class="country-picker">
+                <span class="sr-only">Choose a country</span>
+                <select id="countrySelector" aria-label="Choose a country">
+                  <option value="japan">Japan</option>
+                  <option value="italy">Italy</option>
+                  <option value="france">France</option>
+                  <option value="india">India</option>
+                  <option value="mexico">Mexico</option>
+                </select>
+              </label>
+            </div>
+
+            <div id="menuItems"></div>
+          </div>
+        </div>
+
+        <div class="demo-panel voice-panel">
+          <div class="mic-status"><span class="mic"></span> Listening</div>
+
+          <div class="transcript">
+            <h4>Voice prompt</h4>
+            <div class="prompt" id="assistantPrompt">"Hey Meta, read out the menu."</div>
+            <div class="reply" id="assistantReply" aria-live="polite"></div>
+          </div>
+
+          <div class="demo-actions">
+            <button class="demo-btn" type="button" data-action="read">Read menu</button>
+            <button class="demo-btn" type="button" data-action="translate">Translate</button>
+            <button class="demo-btn" type="button" data-action="call">Take call</button>
+            <button class="demo-btn" type="button" data-action="capture">Capture</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="capture">
+      <div class="section-head">
+        <h2>Capture the moments that matter</h2>
+        <p>From travel memories to candid conversations, MetaVision preserves the scene without interrupting the experience.</p>
+      </div>
+
+      <div class="capture-strip">
+        <article class="moment">
+          <div class="moment-content">
+            <div>
+              <span class="mini-label">Memory</span>
+              <h4>Tokyo street</h4>
+            </div>
+            <p>Auto-captured evening walk with lighting and landmark recognition.</p>
+          </div>
+        </article>
+
+        <article class="moment">
+          <div class="moment-content">
+            <div>
+              <span class="mini-label">Conversation</span>
+              <h4>Local guide</h4>
+            </div>
+            <p>Summarized in real time with subtitles and instant translation.</p>
+          </div>
+        </article>
+
+        <article class="moment">
+          <div class="moment-content">
+            <div>
+              <span class="mini-label">Call</span>
+              <h4>Hands-free</h4>
+            </div>
+            <p>Quality audio, ambient noise reduction, and one-touch call controls.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© 2026 MetaVision</div>
+      <div>AI smart glasses for everyday life</div>
+    </div>
+  </footer>
+
+  <script>
+    const assistantReply = document.getElementById('assistantReply');
+    const assistantPrompt = document.getElementById('assistantPrompt');
+    const menuContainer = document.getElementById('menuItems');
+    const countrySelector = document.getElementById('countrySelector');
+    let isTranslated = false;
+
+    const destinations = {
+      japan: {
+        name: 'Japan',
+        currency: '¥',
+        menu: [
+          ['とんかつ定食', 'Pork cutlet set', '¥1,200'],
+          ['牛丼', 'Beef rice bowl', '¥980'],
+          ['味噌ラーメン', 'Miso ramen', '¥1,050'],
+          ['天ぷら盛り合わせ', 'Assorted tempura', '¥1,480']
+        ]
+      },
+      italy: {
+        name: 'Italy',
+        currency: '€',
+        menu: [
+          ['Margherita', 'Tomato and mozzarella pizza', '€9'],
+          ['Cacio e pepe', 'Pasta with cheese and pepper', '€12'],
+          ['Risotto ai funghi', 'Mushroom risotto', '€14'],
+          ['Tiramisù', 'Coffee-flavored dessert', '€7']
+        ]
+      },
+      france: {
+        name: 'France',
+        currency: '€',
+        menu: [
+          ['Croque-monsieur', 'Toasted ham and cheese sandwich', '€11'],
+          ['Soupe à l’oignon', 'French onion soup', '€9'],
+          ['Ratatouille', 'Slow-cooked vegetable dish', '€15'],
+          ['Crème brûlée', 'Vanilla custard with caramelized sugar', '€8']
+        ]
+      },
+      india: {
+        name: 'India',
+        currency: '₹',
+        menu: [
+          ['मसाला डोसा', 'Masala dosa with potato filling', '₹180'],
+          ['पनीर बटर मसाला', 'Paneer in a creamy tomato sauce', '₹320'],
+          ['वेज बिरयानी', 'Spiced vegetable rice', '₹260'],
+          ['गुलाब जामुन', 'Sweet milk-solid dumplings', '₹120']
+        ]
+      },
+      mexico: {
+        name: 'Mexico',
+        currency: '$',
+        menu: [
+          ['Tacos al pastor', 'Marinated pork tacos', '$95'],
+          ['Quesadillas', 'Grilled tortillas with melted cheese', '$80'],
+          ['Enchiladas verdes', 'Tortillas with green salsa', '$140'],
+          ['Churros', 'Fried dough with cinnamon sugar', '$65']
+        ]
+      }
+    };
+
+    function renderMenu() {
+      const destination = destinations[countrySelector.value];
+      menuContainer.replaceChildren();
+
+      destination.menu.forEach(([localName, englishName, price]) => {
+        const item = document.createElement('div');
+        item.className = 'menu-item';
+
+        const description = document.createElement('div');
+        const title = document.createElement('strong');
+        const translation = document.createElement('span');
+        const itemPrice = document.createElement('div');
+
+        title.textContent = isTranslated ? englishName : localName;
+        translation.textContent = isTranslated ? localName : englishName;
+        itemPrice.className = 'price';
+        itemPrice.textContent = price;
+
+        description.append(title, translation);
+        item.append(description, itemPrice);
+        menuContainer.append(item);
+      });
+
+      assistantReply.textContent = `“You're viewing a sample menu from ${destination.name}. Choose Translate to see the items in English, or Read menu to view the local names.”`;
+    }
+
+    countrySelector.addEventListener('change', () => {
+      isTranslated = false;
+      renderMenu();
+    });
+
+    renderMenu();
+
+    document.querySelectorAll('[data-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.action;
+
+        if (action === 'translate' || action === 'read') {
+          isTranslated = action === 'translate';
+          renderMenu();
+          assistantPrompt.textContent = action === 'translate'
+            ? '"Translate this menu into English."'
+            : '"Hey Meta, read out the menu."';
+          assistantReply.textContent = action === 'translate'
+            ? `“Here is the ${destinations[countrySelector.value].name} menu translated into English. The original local names are shown underneath each dish.”`
+            : `“Reading the menu in ${destinations[countrySelector.value].name}'s local language. English translations are shown underneath each dish.”`;
+        } else if (action === 'call') {
+          assistantPrompt.textContent = '"Answer my call."';
+          assistantReply.textContent = '“Call connected. Enjoy hands-free audio while you explore.”';
+        } else if (action === 'capture') {
+          assistantPrompt.textContent = '"Capture this moment."';
+          assistantReply.textContent = '“Capture demo started. In a real product, your glasses would save a photo or video to your device.”';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
